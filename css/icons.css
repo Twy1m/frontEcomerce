@@ -1,0 +1,17 @@
+.icon-user {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: black;
+    -webkit-mask: url("../icons/user.svg") center / contain no-repeat;
+    mask: url("../icons/user.svg") center / contain no-repeat;
+}
+
+.icon-bag {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: black;
+    -webkit-mask: url("../icons/bag.svg") center / contain no-repeat;
+    mask: url("../icons/bag.svg") center / contain no-repeat;
+}
