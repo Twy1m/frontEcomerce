@@ -134,15 +134,10 @@ body:has(.grid-produtos) {
 	border: 1px solid rgba(0, 0, 0, 0.06);
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 	overflow: hidden;
-	transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card-produto:hover {
-	transform: translateY(-4px);
-	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .card-img {
+	position: relative;
 	aspect-ratio: 1 / 1;
 	background-color: #f2f2f2;
 	overflow: hidden;
@@ -153,11 +148,18 @@ body:has(.grid-produtos) {
 	height: 100%;
 	object-fit: cover;
 	display: block;
-	transition: transform 0.3s ease;
 }
 
-.card-produto:hover .card-img img {
-	transform: scale(1.04);
+/* segunda imagem fica por cima, escondida até o hover */
+.card-img .img-hover {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.card-produto:hover .card-img .img-hover {
+	opacity: 1;
 }
 
 .card-content {
@@ -177,6 +179,11 @@ body:has(.grid-produtos) {
 	line-clamp: 2;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
+}
+
+.card-name:hover {
+	text-decoration: underline;
+	text-underline-offset: 3px;
 }
 
 .card-price {
