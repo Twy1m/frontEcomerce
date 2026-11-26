@@ -8,26 +8,110 @@
 	color: #000;
 }
 
+/* nav em "vidro": translúcida em repouso, ganha corpo no hover */
 .nav-bar {
-	background: rgba(255, 255, 255, 0.75);
-	border-radius: 16px;
-	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-	backdrop-filter: blur(4px);
-	-webkit-backdrop-filter: blur(4px);
-	border: 1px solid rgba(238, 235, 235, 0.61);
-
-	font-size: 1.2rem;
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
-	gap: 2rem 3rem;
-	padding: 1.2rem;
-	border-radius: 2.1rem;
-	background-color: #f2f2f2;
-	opacity: 0.8;
+	gap: 0.5rem 2.2rem;
+	padding: 0.85rem 2.2rem;
+	font-size: 1rem;
+	letter-spacing: 0.02em;
+
+	background-color: rgba(255, 255, 255, 0.45);
+	border: 1px solid rgba(255, 255, 255, 0.5);
+	border-radius: 999px;
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+	backdrop-filter: blur(14px) saturate(140%);
+	-webkit-backdrop-filter: blur(14px) saturate(140%);
+
+	/* a transição fica no estado normal: anima na entrada E na saída do mouse */
+	transition:
+		background-color 0.5s ease,
+		box-shadow 0.5s ease,
+		border-color 0.5s ease;
 }
 
-.nav-bar a:hover {
-	text-decoration: underline ;
+.nav-bar:hover {
+	background-color: rgba(255, 255, 255, 0.8);
+	border-color: rgba(255, 255, 255, 0.9);
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.nav-bar a {
+	position: relative;
+	padding-block: 0.2rem;
+	opacity: 0.75;
+	transition: opacity 0.3s ease;
+}
+
+/* sublinhado que cresce do centro em vez de aparecer de uma vez */
+.nav-bar a::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 1px;
+	background-color: currentColor;
+	transform: scaleX(0);
+	transition: transform 0.35s ease;
+}
+
+.nav-bar a:hover,
+.nav-bar a:focus-visible {
+	opacity: 1;
+}
+
+.nav-bar a:hover::after,
+.nav-bar a:focus-visible::after {
+	transform: scaleX(1);
+}
+
+@media (max-width: 560px) {
+	.nav-bar {
+		gap: 0.4rem 1.2rem;
+		padding: 0.7rem 1.2rem;
+		font-size: 0.85rem;
+		border-radius: 1.4rem;
+	}
+}
+
+/* ---------- Barra de rolagem ---------- */
+
+/* "gutter stable" reserva o espaço da barra em TODAS as páginas, mesmo nas que
+   não rolam. Assim header, footer e conteúdo ficam no mesmo lugar ao trocar de página */
+html {
+	scrollbar-gutter: stable;
+	/* padrão (Firefox e Chrome/Edge recentes): fina, polegar cinza, trilho transparente */
+	scrollbar-width: thin;
+	scrollbar-color: rgba(0, 0, 0, 0.28) transparent;
+}
+
+/* na inicial não tem rolagem: a faixa reservada fica preta, junto do vídeo */
+html:has(.homepage) {
+	background-color: #000;
+}
+
+/* Safari (e Chrome antigo) usam esses seletores no lugar dos de cima */
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 0, 0, 0.28);
+	border-radius: 999px;
+	border: 3px solid transparent; /* "afina" o polegar sem afinar a área de clique */
+	background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(0, 0, 0, 0.5);
 }
 
 body{
@@ -74,7 +158,8 @@ header {
 	transition: 1s;
 }
 
-header:hover {
+/* fundo no hover só na página inicial (body.homepage) */
+.homepage header:hover {
 	background-color: #f2f2f2;
 	transition: all 1.5s ease;
 }
@@ -84,14 +169,19 @@ footer {
 	z-index: 1;
 	left: 0;
 	bottom: 0;
-	width: 100%;
+	width: 100%; /* não desloca entre páginas por causa do scrollbar-gutter (ver "html" no topo) */
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	padding: 4rem;
+	padding: 2rem 1rem;
 	box-sizing: border-box;
-	mix-blend-mode: hard-light;
+	/* a faixa do footer não bloqueia cliques no conteúdo; só a nav é clicável */
+	pointer-events: none;
+}
+
+footer .nav-bar {
+	pointer-events: auto;
 }
 
 /* ---------- Grid de produtos ---------- */
@@ -191,3 +281,381 @@ body:has(.grid-produtos) {
 	font-weight: 700;
 }
 
+
+/* ---------- Página do produto ---------- */
+
+body:has(.pagina-produto) {
+	overflow: auto;
+}
+
+.pagina-produto {
+	max-width: 1400px;
+	margin: 0 auto;
+	padding: 1.5rem 2rem 12rem; /* espaco embaixo pro footer fixo */
+	box-sizing: border-box;
+}
+
+/* imagens à esquerda, informações à direita */
+.grid-produto {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+	gap: 3rem;
+	align-items: start;
+}
+
+/* miniaturas | imagens empilhadas */
+.produto-galeria {
+	display: grid;
+	grid-template-columns: 96px minmax(0, 1fr);
+	gap: 1.5rem;
+	align-items: start;
+}
+
+.produto-galeria.sem-miniaturas {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+/* mini carrossel vertical: acompanha a rolagem da página */
+.produto-carrossel {
+	position: sticky;
+	top: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	max-height: calc(100vh - 2rem);
+}
+
+.produto-miniaturas {
+	position: relative; /* referência pro offsetTop das miniaturas no JS */
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	overflow-y: auto;
+	scrollbar-width: none; /* esconde a barra: quem navega são as setas */
+	padding: 2px; /* não corta a borda da miniatura ativa */
+}
+
+.produto-miniaturas::-webkit-scrollbar {
+	display: none;
+}
+
+.produto-miniatura {
+	flex: 0 0 auto;
+	aspect-ratio: 4 / 5;
+	padding: 0;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	background-color: #f2f2f2;
+	overflow: hidden;
+	cursor: pointer;
+	opacity: 0.6;
+	transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.produto-miniatura:hover {
+	opacity: 1;
+}
+
+.produto-miniatura.ativa {
+	opacity: 1;
+	border-color: #000;
+}
+
+.produto-miniatura img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.carrossel-seta {
+	flex: 0 0 auto;
+	padding: 0.3rem 0;
+	border: none;
+	background: none;
+	font-size: 0.8rem;
+	cursor: pointer;
+}
+
+.carrossel-seta:disabled {
+	opacity: 0.2;
+	cursor: default;
+}
+
+/* imagens grandes, uma embaixo da outra */
+.produto-imagens {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.produto-imagem {
+	width: 100%;
+	display: block;
+	background-color: #f2f2f2;
+	scroll-margin-top: 1rem; /* espaço ao rolar pela miniatura */
+}
+
+/* informações: também acompanham a rolagem */
+.produto-info {
+	position: sticky;
+	top: 1rem;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.8rem;
+}
+
+.produto-categoria {
+	font-size: 0.85rem;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	opacity: 0.6;
+}
+
+.produto-nome {
+	font-size: 1.6rem;
+	font-weight: 500;
+	line-height: 1.25;
+}
+
+.produto-promocao {
+	padding: 0.2rem 0.6rem;
+	background-color: #000;
+	color: #fff;
+	font-size: 0.8rem;
+	text-transform: uppercase;
+}
+
+.produto-preco {
+	font-size: 1.5rem;
+	font-weight: 700;
+}
+
+.produto-estoque {
+	font-size: 0.9rem;
+	opacity: 0.7;
+}
+
+.produto-descricao {
+	margin-top: 0.8rem;
+	padding-top: 1.2rem;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	line-height: 1.6;
+	white-space: pre-line; /* respeita as quebras de linha da descrição */
+}
+
+.produto-mensagem {
+	grid-column: 1 / -1;
+	text-align: center;
+	padding: 4rem 0;
+}
+
+/* tablet: informações vão para baixo das imagens */
+@media (max-width: 900px) {
+	.grid-produto {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 2rem;
+	}
+
+	.produto-info {
+		position: static;
+	}
+}
+
+/* palco = imagens + setas + contador. No computador só as imagens aparecem */
+.produto-palco {
+	position: relative;
+	min-width: 0;
+}
+
+.palco-seta,
+.palco-contador {
+	display: none;
+}
+
+/* celular: sem miniaturas, as imagens viram um carrossel com setas nas laterais */
+@media (max-width: 560px) {
+	.pagina-produto {
+		padding-inline: 1rem;
+	}
+
+	.produto-galeria {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.produto-carrossel {
+		display: none;
+	}
+
+	.produto-imagens {
+		flex-direction: row;
+		gap: 0; /* sem espaço: o JS calcula a foto atual pela largura */
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: none;
+	}
+
+	.produto-imagens::-webkit-scrollbar {
+		display: none;
+	}
+
+	.produto-imagem {
+		flex: 0 0 100%;
+		scroll-snap-align: start;
+	}
+
+	.palco-seta {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 2.4rem;
+		height: 2.4rem;
+		padding-bottom: 0.15rem; /* centraliza o ‹ › que fica um pouco baixo */
+		border: 1px solid rgba(255, 255, 255, 0.6);
+		border-radius: 50%;
+		background-color: rgba(255, 255, 255, 0.7);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		font-size: 1.6rem;
+		line-height: 1;
+		cursor: pointer;
+		transition: opacity 0.3s ease, background-color 0.3s ease;
+	}
+
+	.palco-seta.anterior {
+		left: 0.6rem;
+	}
+
+	.palco-seta.proxima {
+		right: 0.6rem;
+	}
+
+	.palco-seta:active {
+		background-color: rgba(255, 255, 255, 0.95);
+	}
+
+	/* na primeira/última foto a seta some suavemente */
+	.palco-seta:disabled {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.palco-contador {
+		display: block;
+		position: absolute;
+		bottom: 0.7rem;
+		left: 50%;
+		transform: translateX(-50%);
+		padding: 0.2rem 0.7rem;
+		border-radius: 999px;
+		background-color: rgba(255, 255, 255, 0.7);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+		font-size: 0.8rem;
+		pointer-events: none;
+	}
+}
+
+/* ---------- Ações do produto (carrinho e favoritos) ---------- */
+
+.produto-acoes {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	margin-top: 0.4rem;
+}
+
+.produto-acoes-linha {
+	display: flex;
+	gap: 0.5rem;
+	align-items: stretch;
+}
+
+.produto-quantidade {
+	display: flex;
+	align-items: center;
+	border: 1px solid #000;
+}
+
+.produto-quantidade button {
+	width: 2.2rem;
+	height: 100%;
+	border: none;
+	background: none;
+	font-size: 1.1rem;
+	cursor: pointer;
+}
+
+.produto-quantidade button:disabled {
+	opacity: 0.25;
+	cursor: default;
+}
+
+.produto-quantidade span {
+	min-width: 1.8rem;
+	text-align: center;
+}
+
+.btn-carrinho {
+	flex: 1;
+	padding: 0.9rem 1rem;
+	border: 1px solid #000;
+	background-color: #000;
+	color: #fff;
+	font-size: 0.95rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-carrinho:hover:not(:disabled) {
+	background-color: #fff;
+	color: #000;
+}
+
+.btn-carrinho:disabled {
+	opacity: 0.4;
+	cursor: default;
+}
+
+.btn-favorito {
+	width: 3.2rem;
+	border: 1px solid #000;
+	background: #fff;
+	font-size: 1.4rem;
+	line-height: 1;
+	cursor: pointer;
+	transition: transform 0.15s ease;
+}
+
+.btn-favorito:hover:not(:disabled) {
+	transform: scale(1.05);
+}
+
+.btn-favorito.ativo {
+	color: #c0392b;
+}
+
+.produto-aviso {
+	font-size: 0.9rem;
+}
+
+.produto-aviso.sucesso {
+	color: #1e7e34;
+}
+
+.produto-aviso.erro {
+	color: #c0392b;
+}
+
+.produto-aviso a {
+	color: inherit;
+	text-decoration: underline;
+}
