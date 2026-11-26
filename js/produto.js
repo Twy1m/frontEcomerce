@@ -171,7 +171,9 @@ function criarAcoes(produto) {
     const avisarLogin = () => {
         aviso.textContent = 'Entre na sua conta para continuar. '
         const link = criarElemento('a', '', 'Fazer login')
-        link.href = './perfil.html'
+        // depois de entrar, o login traz o usuário de volta para este produto
+        const voltar = `produto.html${window.location.search}`
+        link.href = `./login.html?voltar=${encodeURIComponent(voltar)}`
         aviso.appendChild(link)
         aviso.className = 'produto-aviso erro'
         aviso.hidden = false
@@ -212,17 +214,14 @@ function criarAcoes(produto) {
         menos.disabled = mais.disabled = true
     }
 
+    // sem login também funciona: o carrinho.js guarda no localStorage até a pessoa entrar
     btnCarrinho.addEventListener('click', async () => {
-        if (!estaLogado()) return avisarLogin()
-
         btnCarrinho.disabled = true
         btnCarrinho.textContent = 'Adicionando...'
         try {
-            await api('/carrinho/itens', {
-                method: 'POST',
-                body: { idProduto: produto.codProduto, quantidade }
-            })
+            await window.carrinho.adicionar(produto, quantidade)
             avisar(`${quantidade} item(ns) adicionado(s) ao carrinho.`, 'sucesso')
+            window.carrinho.abrir()
             quantidade = 1
             atualizarQtd()
         } catch (err) {

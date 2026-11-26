@@ -4,6 +4,8 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="../css/style.css" />
+		<script src="../js/carrinho.js" defer></script>
+		<script src="../js/navbar.js" defer></script>
 		<script src="../js/produtos.js" defer></script>
 		<title>E-comerce</title>
 	</head>
@@ -20,15 +22,34 @@
 			</nav>
 		</header>
 		<main>
-			<section class="grid-produtos">
-			</section>
+			<div class="pagina-produtos">
+				<!-- preenchido pelo produtos.js -->
+				<aside class="filtros" id="filtros" aria-label="Filtros"></aside>
+
+				<div class="produtos-conteudo">
+					<div class="produtos-toolbar">
+						<div class="produtos-cabecalho">
+							<h1 class="produtos-titulo">Produtos</h1>
+							<span class="produtos-contagem" aria-live="polite"></span>
+						</div>
+						<div class="produtos-controles">
+							<button type="button" class="btn-secundario btn-abrir-filtros" aria-controls="filtros" aria-expanded="false">Filtros</button>
+							<label class="produtos-ordenar">
+								<span>Ordenar por</span>
+								<select id="ordenar"></select>
+							</label>
+						</div>
+					</div>
+					<div class="produtos-chips" hidden></div>
+					<section class="grid-produtos" aria-label="Lista de produtos"></section>
+				</div>
+			</div>
 		</main>
 		<footer>
 			<nav class="nav-bar">
 				<a href="../index.html">Inicio</a>
 				<a href="./produtos.html">Produtos</a>
-				<a href="./fotos.html">Imagens</a>
-				<a href="./videos.html">Videos</a>
+				<a href="./galeria.html">Galeria</a>
 				<a href="./contato.html">Politicas de contato</a>
 				<a href="./sobre.html">Sobre</a>
 			</nav>

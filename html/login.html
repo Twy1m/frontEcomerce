@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<script src="../js/carrinho.js" defer></script>
+		<script src="../js/navbar.js" defer></script>
+		<script src="../js/login.js" defer></script>
+		<title>Entrar | E-comerce</title>
+	</head>
+
+	<body>
+		<header>
+			<nav id="logo">
+				<a href="#"></a>
+			</nav>
+
+			<nav id="users">
+				<a href="./perfil.html" class="icon-user" aria-label="Acessar perfil"></a>
+				<a id="carrinho" class="icon-bag" aria-label="Acessar carrinho"></a>
+			</nav>
+		</header>
+		<main>
+			<section class="pagina-login">
+				<form class="form-login" novalidate>
+					<h1 class="login-titulo">Entrar</h1>
+
+					<label class="login-campo">
+						<span>E-mail</span>
+						<input type="email" name="email" autocomplete="email" required />
+					</label>
+
+					<label class="login-campo">
+						<span>Senha</span>
+						<input type="password" name="senha" autocomplete="current-password" required />
+					</label>
+
+					<p class="login-aviso" role="alert" hidden></p>
+
+					<button type="submit" class="btn-login">Entrar</button>
+
+					<p class="login-troca">
+						Não tem conta? <a class="link-troca" href="./cadastro.html">Criar conta</a>
+					</p>
+				</form>
+			</section>
+		</main>
+		<footer>
+			<nav class="nav-bar">
+				<a href="../index.html">Inicio</a>
+				<a href="./produtos.html">Produtos</a>
+				<a href="./galeria.html">Galeria</a>
+				<a href="./contato.html">Politicas de contato</a>
+				<a href="./sobre.html">Sobre</a>
+			</nav>
+		</footer>
+	</body>
+</html>

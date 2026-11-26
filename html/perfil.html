@@ -4,7 +4,10 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="../css/style.css" />
-		<title>E-comerce</title>
+		<script src="../js/carrinho.js" defer></script>
+		<script src="../js/navbar.js" defer></script>
+		<script src="../js/perfil.js" defer></script>
+		<title>Meu perfil | E-comerce</title>
 	</head>
 
 	<body>
@@ -19,16 +22,36 @@
 			</nav>
 		</header>
 		<main>
-			<section class="grid-produtos">
-				<div class="grid-produto"></div>
-			</section>
+			<div class="pagina-perfil">
+				<h1 class="login-titulo">Meu perfil</h1>
+
+				<section class="perfil-secao" aria-labelledby="titulo-dados">
+					<h2 class="perfil-secao-titulo" id="titulo-dados">Meus dados</h2>
+					<div class="perfil-conteudo">Carregando...</div>
+				</section>
+
+				<section class="perfil-secao" aria-labelledby="titulo-enderecos">
+					<div class="perfil-secao-topo">
+						<h2 class="perfil-secao-titulo" id="titulo-enderecos">Endereços</h2>
+						<button type="button" class="btn-secundario" id="btn-novo-endereco">Adicionar endereço</button>
+					</div>
+					<p class="perfil-aviso" id="aviso-enderecos" role="status" hidden></p>
+					<div id="form-endereco-lugar"></div>
+					<div class="enderecos-lista">Carregando...</div>
+				</section>
+
+				<section class="perfil-secao" aria-labelledby="titulo-pedidos">
+					<h2 class="perfil-secao-titulo" id="titulo-pedidos">Meus pedidos</h2>
+					<p class="perfil-aviso" id="aviso-pedidos" role="status" hidden></p>
+					<div class="pedidos-lista">Carregando...</div>
+				</section>
+			</div>
 		</main>
 		<footer>
 			<nav class="nav-bar">
 				<a href="../index.html">Inicio</a>
 				<a href="./produtos.html">Produtos</a>
-				<a href="./fotos.html">Imagens</a>
-				<a href="./videos.html">Videos</a>
+				<a href="./galeria.html">Galeria</a>
 				<a href="./contato.html">Politicas de contato</a>
 				<a href="./sobre.html">Sobre</a>
 			</nav>
