@@ -1857,3 +1857,177 @@ body:has(.pagina-perfil) {
 		justify-content: space-between;
 	}
 }
+
+/* formulário de editar dados ocupa a largura da seção */
+.perfil-conteudo .endereco-form {
+	align-self: stretch;
+}
+
+/* ---------- Login: etapa do código (admin) ---------- */
+
+.codigo-instrucao {
+	font-size: 0.9rem;
+	line-height: 1.5;
+	overflow-wrap: anywhere;
+}
+
+.campo-codigo {
+	font-size: 1.6rem !important;
+	letter-spacing: 0.5em;
+	text-align: center;
+	font-variant-numeric: tabular-nums;
+}
+
+.codigo-acoes {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 0.8rem;
+}
+
+.login-aviso.sucesso {
+	color: #1e7e34;
+}
+
+/* link com cara de botão preto (o "*" do topo pinta todo texto de preto) */
+a.btn-login {
+	display: inline-block;
+	color: #fff;
+	text-align: center;
+}
+
+a.btn-login:hover {
+	color: #000;
+}
+
+/* ---------- Painel do administrador ---------- */
+
+body:has(.pagina-admin) {
+	overflow: auto;
+}
+
+.admin-carregando {
+	padding: 4rem 1rem;
+	text-align: center;
+	opacity: 0.6;
+}
+
+.admin-topo {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.admin-saudacao {
+	margin-top: 0.4rem;
+	font-size: 0.95rem;
+}
+
+.admin-sessao {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.8rem;
+}
+
+.admin-expira {
+	font-size: 0.8rem;
+	opacity: 0.65;
+}
+
+.admin-resumo {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+	gap: 1rem;
+}
+
+.admin-cartao {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	padding: 1rem;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.admin-cartao-titulo {
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	opacity: 0.6;
+}
+
+.admin-cartao-valor {
+	font-size: 1.6rem;
+	font-variant-numeric: tabular-nums;
+	overflow-wrap: anywhere;
+}
+
+.admin-cartao-detalhe {
+	font-size: 0.8rem;
+	opacity: 0.6;
+}
+
+/* tabela rola de lado no celular em vez de estourar a página */
+.admin-tabela-envoltorio {
+	overflow-x: auto;
+}
+
+.admin-tabela {
+	width: 100%;
+	min-width: 520px;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+}
+
+.admin-tabela th {
+	padding: 0.6rem 0.5rem;
+	border-bottom: 1px solid #000;
+	font-size: 0.75rem;
+	font-weight: 500;
+	text-align: left;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.admin-tabela td {
+	padding: 0.7rem 0.5rem;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.admin-tabela th:last-child,
+.admin-numero {
+	text-align: right;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+}
+
+.admin-estoque-lista {
+	list-style: none;
+	border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.admin-estoque-item {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.7rem 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+	font-size: 0.9rem;
+}
+
+.admin-estoque-item a:hover {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.admin-estoque-qtd {
+	color: #9a6700;
+	white-space: nowrap;
+}
+
+.admin-estoque-zero {
+	color: #c0392b;
+	white-space: nowrap;
+}

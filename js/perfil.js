@@ -119,21 +119,146 @@ function criarLinha(rotulo, valor) {
     return linha
 }
 
+let usuarioAtual = null
+
 async function carregarDados() {
     try {
-        const usuario = await api('/usuarios/me')
-        conteudoDados.innerHTML = ''
-
-        const dados = criarElemento('dl', 'perfil-dados')
-        dados.append(criarLinha('Nome', usuario.nome), criarLinha('E-mail', usuario.email))
-
-        const btnSair = criarBotao('Sair')
-        btnSair.addEventListener('click', sair)
-
-        conteudoDados.append(dados, btnSair)
+        usuarioAtual = await api('/usuarios/me')
+        mostrarDados()
     } catch (err) {
         conteudoDados.textContent = err.message
     }
+}
+
+function mostrarDados(mensagem) {
+    conteudoDados.innerHTML = ''
+
+    if (mensagem) {
+        const aviso = criarElemento('p', 'perfil-aviso sucesso', mensagem)
+        aviso.setAttribute('role', 'status')
+        conteudoDados.appendChild(aviso)
+    }
+
+    const dados = criarElemento('dl', 'perfil-dados')
+    dados.append(criarLinha('Nome', usuarioAtual.nome), criarLinha('E-mail', usuarioAtual.email))
+
+    const botoes = criarElemento('div', 'endereco-form-botoes')
+    const btnEditar = criarBotao('Editar dados')
+    btnEditar.addEventListener('click', abrirFormDados)
+    const btnSair = criarBotao('Sair')
+    btnSair.addEventListener('click', sair)
+    botoes.append(btnEditar, btnSair)
+
+    // atalho para o painel (o painel confere de novo com o servidor)
+    if (usuarioAtual.tipo === 'admin') {
+        const linkPainel = criarElemento('a', 'btn-login', 'Painel do administrador')
+        linkPainel.href = './admin.html'
+        botoes.prepend(linkPainel)
+    }
+
+    conteudoDados.append(dados, botoes)
+}
+
+// nome sempre editável; e-mail e senha pedem a senha atual (o backend confere)
+function abrirFormDados() {
+    conteudoDados.innerHTML = ''
+
+    const form = criarElemento('form', 'endereco-form')
+    form.noValidate = true
+    form.appendChild(criarElemento('h3', 'endereco-form-titulo', 'Editar dados'))
+
+    const grade = criarElemento('div', 'endereco-grade')
+    grade.append(
+        campo('Nome', 'nome', { valor: usuarioAtual.nome, maxLength: 150, autocomplete: 'name' }),
+        campo('E-mail', 'email', { valor: usuarioAtual.email, type: 'email', maxLength: 150, autocomplete: 'email' })
+    )
+
+    const gradeSenha = criarElemento('div', 'endereco-grade')
+    gradeSenha.append(
+        campo('Nova senha', 'senha', { obrigatorio: false, type: 'password', minLength: 6, autocomplete: 'new-password' }),
+        campo('Confirmar nova senha', 'confirmarSenha', { obrigatorio: false, type: 'password', autocomplete: 'new-password' })
+    )
+
+    // só aparece quando a pessoa mexe no e-mail ou digita uma senha nova
+    const blocoSenhaAtual = campo('Senha atual', 'senhaAtual', { type: 'password', autocomplete: 'current-password' })
+    blocoSenhaAtual.hidden = true
+    const dicaSenhaAtual = criarElemento('p', 'perfil-vazio', 'Para trocar o e-mail ou a senha, confirme sua senha atual.')
+    dicaSenhaAtual.hidden = true
+
+    const precisaSenhaAtual = () =>
+        form.elements.email.value.trim().toLowerCase() !== usuarioAtual.email || form.elements.senha.value !== ''
+
+    form.addEventListener('input', () => {
+        const precisa = precisaSenhaAtual()
+        blocoSenhaAtual.hidden = !precisa
+        dicaSenhaAtual.hidden = !precisa
+    })
+
+    const aviso = criarElemento('p', 'perfil-aviso erro')
+    aviso.setAttribute('role', 'alert')
+    aviso.hidden = true
+    const erro = (texto, campoComFoco) => {
+        aviso.textContent = texto
+        aviso.hidden = false
+        if (campoComFoco) form.elements[campoComFoco].focus()
+    }
+
+    const botoes = criarElemento('div', 'endereco-form-botoes')
+    const btnSalvar = criarElemento('button', 'btn-login', 'Salvar')
+    btnSalvar.type = 'submit'
+    const btnCancelar = criarBotao('Cancelar')
+    btnCancelar.addEventListener('click', () => mostrarDados())
+    botoes.append(btnSalvar, btnCancelar)
+
+    form.append(grade, gradeSenha, dicaSenhaAtual, blocoSenhaAtual, aviso, botoes)
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        aviso.hidden = true
+
+        const nome = form.elements.nome.value.trim()
+        const email = form.elements.email.value.trim()
+        const senha = form.elements.senha.value
+        const senhaAtual = form.elements.senhaAtual.value
+
+        if (!nome) return erro('O nome não pode ficar vazio.', 'nome')
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return erro('Informe um e-mail válido.', 'email')
+        if (senha && senha.length < 6) return erro('A nova senha precisa ter pelo menos 6 caracteres.', 'senha')
+        if (senha !== form.elements.confirmarSenha.value) return erro('As senhas novas não são iguais.', 'confirmarSenha')
+        if (precisaSenhaAtual() && !senhaAtual) return erro('Informe sua senha atual.', 'senhaAtual')
+
+        // manda só o que mudou
+        const corpo = {}
+        if (nome !== usuarioAtual.nome) corpo.nome = nome
+        if (email.toLowerCase() !== usuarioAtual.email) corpo.email = email
+        if (senha) corpo.senha = senha
+        if (corpo.email || corpo.senha) corpo.senhaAtual = senhaAtual
+
+        if (!Object.keys(corpo).length) return mostrarDados()
+
+        btnSalvar.disabled = true
+        btnSalvar.textContent = 'Salvando...'
+        try {
+            usuarioAtual = await api('/usuarios/me', { method: 'PUT', body: corpo })
+
+            // o carrinho e outras páginas leem o nome/e-mail daqui
+            try {
+                const salvo = JSON.parse(localStorage.getItem('usuario')) || {}
+                localStorage.setItem('usuario', JSON.stringify({ ...salvo, nome: usuarioAtual.nome, email: usuarioAtual.email }))
+            } catch {
+                // sem localStorage: segue
+            }
+
+            mostrarDados(corpo.senha ? 'Dados e senha atualizados.' : 'Dados atualizados.')
+        } catch (err) {
+            erro(err.message) // ex.: "Senha atual incorreta", "E-mail já cadastrado"
+            btnSalvar.disabled = false
+            btnSalvar.textContent = 'Salvar'
+        }
+    })
+
+    conteudoDados.appendChild(form)
+    form.elements.nome.focus()
 }
 
 // ---------- endereços ----------

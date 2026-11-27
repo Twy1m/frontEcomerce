@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="robots" content="noindex" />
+		<link rel="stylesheet" href="../css/style.css" />
+		<script src="../js/admin.js" defer></script>
+		<title>Painel do administrador | E-comerce</title>
+	</head>
+
+	<body>
+		<header>
+			<nav id="logo">
+				<a href="#"></a>
+			</nav>
+
+			<nav id="users">
+				<a href="./perfil.html" class="icon-user" aria-label="Acessar perfil"></a>
+			</nav>
+		</header>
+		<main>
+			<!-- fica escondido até o admin.js confirmar com o servidor que é um admin -->
+			<div class="pagina-perfil pagina-admin" hidden>
+				<div class="admin-topo">
+					<div>
+						<h1 class="login-titulo">Painel do administrador</h1>
+						<p class="admin-saudacao"></p>
+					</div>
+					<div class="admin-sessao">
+						<span class="admin-expira" aria-live="polite"></span>
+						<button type="button" class="btn-secundario" id="btn-sair-admin">Sair</button>
+					</div>
+				</div>
+
+				<section class="perfil-secao" aria-labelledby="titulo-resumo">
+					<h2 class="perfil-secao-titulo" id="titulo-resumo">Resumo</h2>
+					<div class="admin-resumo">Carregando...</div>
+				</section>
+
+				<section class="perfil-secao" aria-labelledby="titulo-ultimos">
+					<h2 class="perfil-secao-titulo" id="titulo-ultimos">Últimos pedidos</h2>
+					<div class="admin-pedidos">Carregando...</div>
+				</section>
+
+				<section class="perfil-secao" aria-labelledby="titulo-estoque">
+					<h2 class="perfil-secao-titulo" id="titulo-estoque">Estoque baixo</h2>
+					<div class="admin-estoque">Carregando...</div>
+				</section>
+			</div>
+			<p class="admin-carregando">Conferindo acesso...</p>
+		</main>
+		<footer>
+			<nav class="nav-bar">
+				<a href="../index.html">Inicio</a>
+				<a href="./produtos.html">Produtos</a>
+				<a href="./galeria.html">Galeria</a>
+				<a href="./contato.html">Politicas de contato</a>
+				<a href="./sobre.html">Sobre</a>
+			</nav>
+		</footer>
+	</body>
+</html>

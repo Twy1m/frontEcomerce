@@ -44,6 +44,39 @@
 						Não tem conta? <a class="link-troca" href="./cadastro.html">Criar conta</a>
 					</p>
 				</form>
+
+				<!-- 2ª etapa, só para admin: o código que chegou por e-mail -->
+				<form class="form-login form-codigo" novalidate hidden>
+					<h1 class="login-titulo">Verificação</h1>
+					<p class="codigo-instrucao">
+						Enviamos um código de 6 números para <strong class="codigo-email"></strong>.
+						Ele vale por 10 minutos.
+					</p>
+
+					<label class="login-campo">
+						<span>Código</span>
+						<input
+							type="text"
+							name="codigo"
+							class="campo-codigo"
+							inputmode="numeric"
+							autocomplete="one-time-code"
+							pattern="[0-9]{6}"
+							maxlength="6"
+							placeholder="000000"
+							required
+						/>
+					</label>
+
+					<p class="login-aviso codigo-aviso" role="alert" hidden></p>
+
+					<button type="submit" class="btn-login">Confirmar</button>
+
+					<div class="codigo-acoes">
+						<button type="button" class="btn-link btn-reenviar" disabled>Reenviar código</button>
+						<button type="button" class="btn-link btn-voltar-login">Usar outra conta</button>
+					</div>
+				</form>
 			</section>
 		</main>
 		<footer>
